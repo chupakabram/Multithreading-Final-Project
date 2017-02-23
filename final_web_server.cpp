@@ -19,8 +19,9 @@
 
 using namespace std;
 
-FILE * fout_stream;                 // log file
-const char * fname_out = "log.txt"; // name of log file
+FILE * fout_stream;                 			// log file
+const char * fname_out = "log.txt"; 	// name of log file
+//const char * fname_out = "/home/box/log.txt"; 	// name of log file
 std::mutex log_mutex;
 
 // Synchronized writing to log file
@@ -113,6 +114,7 @@ void process_request(int client_socket_fd, const char * root_folder)
                         write (client_socket_fd, response_data, bytes_read);
                     
                     printlog("File is sent : %s , pid = %d\n", filepath, pid);
+					close(fd);
                 }
                 else
                 {
