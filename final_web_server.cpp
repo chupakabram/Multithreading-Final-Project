@@ -31,6 +31,7 @@ void printlog(const char * format, ...)
     va_list ap;
     va_start(ap, format); 
     vfprintf ( fout_stream, format, ap );
+	//vprintf ( format, ap );
     fflush(fout_stream);
     va_end(ap);    
 }
@@ -47,8 +48,9 @@ void printlog(const char * format, ...)
 #define BAD_REQUEST_HEADER      "HTTP/1.0 400 Bad Request\n"
 #define NOT_FOUND_HEADER        "HTTP/1.0 404 Not Found\n"
 #define OK_HEADER               "HTTP/1.0 200 OK\n\n"
-#define GET_COMMAND             "GET"
+#define GET_COMMAND             "GET\0"
 #define PROTOCOL_SUPPORTED      "HTTP/1.0"
+#define PROTOCOL_SUPPORTED_1    "HTTP/1.1"
 #define DEFAULT_TARGET          "/index.html"
 
 #define BUFFER_SIZE             4096
@@ -88,15 +90,16 @@ void process_request(int client_socket_fd, const char * root_folder)
     
         // Parse request, prepare and write responce
         printlog("Request : %s\npid = %d\n", request, pid);
-        rline[0] = strtok (request, " \t\n");
+        rline[0] = strtok (request, " \t\n\r");
         // Check the command
         if ( strcmp(rline[0], GET_COMMAND) == 0 )
         {
-            rline[1] = strtok (NULL, " \t");
-            rline[2] = strtok (NULL, " \t\n");
+            rline[1] = strtok (NULL, " \t\r");
+            rline[2] = strtok (NULL, " \t\n\r");
             
             // Check the protocol version
-            if (strcmp( rline[2],PROTOCOL_SUPPORTED) == 0 )
+            if (strncmp( rline[2],PROTOCOL_SUPPORTED, strlen(PROTOCOL_SUPPORTED)) == 0 || 
+					strncmp( rline[2],PROTOCOL_SUPPORTED_1, strlen(PROTOCOL_SUPPORTED_1)) == 0)
             {
                 // Get the filename
                 if ( strncmp(rline[1], "/\0", 2) == 0 )
