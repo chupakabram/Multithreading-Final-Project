@@ -104,7 +104,10 @@ void process_request(int client_socket_fd, const char * root_folder)
                 // Get the filename
                 if ( strncmp(rline[1], "/\0", 2) == 0 )
                     rline[1] = (char *)DEFAULT_TARGET;
-
+				else
+					// check for parameters in the target line
+					rline[1] = strtok (rline[1], "?");
+				
                 strcpy(filepath, root_folder);
                 strcpy(&filepath[strlen(root_folder)], rline[1]);
                 printlog("Request for file: %s, pid = %d\n", filepath, pid);
