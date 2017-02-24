@@ -20,8 +20,8 @@
 using namespace std;
 
 FILE * fout_stream;                 			// log file
-const char * fname_out = "log.txt"; 	// name of log file
-//const char * fname_out = "/home/box/log.txt"; 	// name of log file
+//const char * fname_out = "log.txt"; 	// name of log file
+const char * fname_out = "/home/box/log.txt"; 	// name of log file
 std::mutex log_mutex;
 
 // Synchronized writing to log file
